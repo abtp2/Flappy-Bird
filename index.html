@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+				<meta charset="UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+				<title>Page title</title>
+</head>
+<body>
+
+<!-- shade -->
+<div id="shade"></div>
+
+<!-- bird -->
+<div class="bird" id="bird">
+	<div class="eyes">
+	<div class="eye">●</div>
+	<div class="eye">●</div>
+	</div>	
+	<img class="beak" src="https://imageupload.io/ib/lpcehefdBKOb6l1_1697563682.png">
+</div>
+
+
+<!-- obstacle -->
+<div class="obs-up">
+		<marquee scrollamount="17"></marquee>
+</div>
+<div class="obs-down">
+		<marquee scrollamount="17"></marquee>
+</div>
+
+
+<!-- out -->
+<div id="out" style="background: #fff; width:280px;border: 5px double red;font-size:17px;position: absolute;transform:translateX(-50%);top:40%;left:50%;z-index: 99;display:none;padding:0.5rem 0.8rem;line-height: 1.5;border-radius: 2px;">Yeah 😘, mulli mar gyi, aur tu out ho gaya bc, ek game bhi ni khel pa rha, JEE ghanta dega.<br>
+<button style="background: red;border-radius:4px;border:none;padding:6px 8px;font-size:14px;color:#000;font-weight:500;margin-top: 1rem;" onclick="window.location.reload()">Restart</button>
+</div>
+
+
+<style>
+*{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+#shade{
+background: rgba(0,0,0,0.5);
+position: absolute;
+height: 100vh;
+width: 100vw;
+z-index: 98;
+display: none;
+}
+body{
+background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjHQZ0owFci6YVCrlcn4XSorMnYvDBkZwE9w&usqp=CAU");
+width: 100vw;
+background-repeat: no-repeat;
+background-size: cover;
+height: 100vh; 
+height: calc(var(--vh, 1vh) * 100);
+}
+.bird{
+width: 100px;
+height: 150px;
+border-radius: 50px;
+box-shadow: inset 2px -5px 8px 1px #000;
+background: #ce222b;
+position: relative;
+display: flex; 
+flex-direction: column;
+top: 40%;
+left: 30%;
+border-top: 20px solid white;
+transform: scale(0.78);
+}
+.eyes{
+width: auto;
+margin-left: 0.8rem;
+display: flex;
+justify-content: center;
+}
+.eye{
+background: #fff;
+width: 25px;
+height: 25px;
+border-radius: 100%;
+margin: 2.5rem 0.5rem;
+box-shadow: inset 1px 0 2px 1px #000;
+display: flex;
+padding: 0 1px 0 0;
+align-items: center;
+justify-content: right;
+font-size: 15px;
+}
+
+.beak{
+margin: -2.2rem 0 0 2.4rem;
+width: 40px;
+filter:drop-shadow(4px 4px 1px #000);
+}
+
+
+.obs-down{
+width: 100%;
+position: absolute;
+bottom: 0;
+border-bottom: 20px solid #000;
+}
+.obs-up{
+width: 100%;
+position: absolute;
+top: 0;
+border-top: 20px solid #000;
+}
+marquee:nth-of-type(1){
+width: 100%;
+white-space: nowrap;
+max-height: 70vh;
+display: flex !important; 
+align-items: flex-start !important;
+}
+marquee:nth-of-type(2){
+width: 100%;
+white-space: nowrap;
+max-height: 30vh;
+display: flex !important; 
+align-items: flex-start !important;
+}
+.obs-down .poll{
+border-radius: 10px 10px 0 0;
+outline: 5px solid #000;
+}
+.obs-up .poll{
+border-radius: 0 0 10px 10px;
+}
+.poll{
+width: 55px;
+height: 0;
+background: #000;
+margin: 0 30vw !important;
+display: inline-block;
+}
+
+
+.two{
+height: 20vh;
+}
+.three{
+height: 40vh;
+}
+.four{
+height: 50vh;
+}
+.five{
+height: 35vh;
+}
+.six{
+height: 55vh;
+}
+</style>			
+<script>
+let vh = window.innerHeight * 0.01; document.documentElement.style.setProperty('--vh', `${vh}px`);
+function getRandom(){
+const randomNumber = Math.floor(Math.random() * 4) + 1;
+const numberWords = ["three", "four", "five", "six"];
+return numberWords[randomNumber - 1];
+}
+
+
+
+setInterval(function (){
+var x = document.querySelector(".obs-down marquee");
+var y = getRandom();
+x.innerHTML += `<div class="poll ${y}"></div>`;
+}, 100);
+
+setInterval(function (){
+var x = document.querySelector(".obs-up marquee");
+x.innerHTML += `<div class="poll two"></div>`;
+}, 100);
+
+
+
+
+
+
+function checkOut(){
+document.querySelectorAll(".poll").forEach(x => {
+const element1 = document.getElementById('bird');
+const element2 = x;
+const rect1 = element1.getBoundingClientRect();
+const rect2 = element2.getBoundingClientRect();
+
+const doTheyTouch = !(
+  rect1.right < rect2.left ||
+  rect1.left > rect2.right ||
+  rect1.bottom < rect2.top ||
+  rect1.top > rect2.bottom
+);
+
+if(doTheyTouch){
+document.getElementsByTagName("marquee")[0].scrollAmount = 0;
+document.getElementsByTagName("marquee")[1].scrollAmount = 0;
+window.removeEventListener("devicemotion", handleMotion, true);
+document.getElementById("shade").style.display ="block";
+document.getElementById("out").style.display ="block";
+//setTimeout(function(){window.location.reload();}, 3000);
+}
+});
+}//checkOut
+
+//devicemotion
+const bird = document.querySelector(".bird");
+const move = 30;
+const handleMotion = e => {
+checkOut();
+//const x = Math.round(e.accelerationIncludingGravity.x) * move;
+const y = Math.round(e.accelerationIncludingGravity.y) * move;
+//const z = Math.round(e.accelerationIncludingGravity.z) * move;
+bird.style.transform = `scale(0.78) translate3d(0px, ${-y}px, 0px)`;
+}
+window.addEventListener("devicemotion", handleMotion, true);
+</script>
+</body>
+</html>
